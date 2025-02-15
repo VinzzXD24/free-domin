@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/brat",
-      "destination": "http://178.128.29.36:2086/brat"
-    }
-  ]
-}
