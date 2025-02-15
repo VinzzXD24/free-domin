@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloudflare DNS Manager</title>
+</head>
+<body>
+  <div style="margin: 0 auto; max-width: 600px; padding: 1rem;">
+    <h1>Cloudflare DNS Manager</h1>
+    
+    <div style="margin-bottom: 2rem;">
+      <label>Pilih Domain: </label>
+      <select id="domainSelect"></select>
+    </div>
+    
+    <div style="margin-bottom: 2rem; border: 1px solid #ccc; padding: 1rem;">
+      <h2>Tambah Subdomain</h2>
+      <form id="addForm">
+        <div style="margin-bottom: 1rem;">
+          <label>Subdomain: </label>
+          <input type="text" id="subdomainInput" placeholder="contoh: blog" required>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label>IP Address: </label>
+          <input type="text" id="ipInput" placeholder="contoh: 192.0.2.1" required>
+        </div>
+        <button type="submit">Tambah Subdomain</button>
+      </form>
+    </div>
+    
+    <div style="margin-bottom: 2rem; border: 1px solid #ccc; padding: 1rem;">
+      <h2>Hapus Subdomain</h2>
+      <form id="deleteForm">
+        <div style="margin-bottom: 1rem;">
+          <label>Subdomain (tanpa domain): </label>
+          <input type="text" id="deleteSubdomainInput" placeholder="contoh: blog" required>
+        </div>
+        <button type="submit">Hapus Subdomain</button>
+      </form>
+    </div>
+    
+    <p id="message"></p>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
