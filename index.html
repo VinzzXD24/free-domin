@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Create Subdomain</title>
+  <!-- Memuat axios dari CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f0f0f0;
+      background: #f9f9f9;
       margin: 0;
       padding: 20px;
     }
@@ -25,7 +27,7 @@
     }
     label {
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
     }
     input[type="text"],
     select {
@@ -35,145 +37,150 @@
       box-sizing: border-box;
     }
     button {
-      margin-top: 15px;
+      margin-top: 20px;
       width: 100%;
       padding: 10px;
       background: #007bff;
       color: #fff;
       border: none;
       border-radius: 4px;
-      cursor: pointer;
       font-size: 16px;
+      cursor: pointer;
     }
     button:hover {
       background: #0056b3;
     }
     .message {
-      margin-top: 15px;
+      margin-top: 20px;
       text-align: center;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Create Subdomain</h1>
-    <form id="subdomainForm">
-      <label for="domain">Pilih Domain:</label>
-      <select id="domain" required>
-        <option value="">--Pilih Domain--</option>
-      </select>
-
-      <label for="subdomain">Nama Subdomain:</label>
-      <input type="text" id="subdomain" placeholder="contoh: subdomain" required>
-
-      <label for="ip">IP Address (untuk record A):</label>
-      <input type="text" id="ip" placeholder="contoh: 192.0.2.1" required>
-
+    <form id="createSubdomainForm">
+      <!-- Dropdown Pilih Domain -->
+      <label for="domainSelect">Pilih Domain:</label>
+      <select id="domainSelect" required></select>
+      
+      <!-- Input untuk Host/Subdomain -->
+      <label for="hostInput">Subdomain (Hostname):</label>
+      <input type="text" id="hostInput" placeholder="contoh: subdomain" required>
+      
+      <!-- Input untuk IP Address -->
+      <label for="ipInput">IP Address:</label>
+      <input type="text" id="ipInput" placeholder="contoh: 192.0.2.1" required>
+      
       <button type="submit">Buat Subdomain</button>
     </form>
     <div class="message" id="message"></div>
   </div>
 
   <script>
-    // Data konfigurasi domain beserta zone dan API token
-    const domainsConfig = {
+    // Konfigurasi domain (mirip dengan global.subdomain pada kode bot)
+    const globalSubdomain = {
       "serverku.biz.id": {
-        "zone": "4e4feaba70b41ed78295d2dcc090dd3a", 
-        "apitoken": "oof_QRNdUC4aMQ3xIB8dmkGaZu7rk2J-0P_tN55l"
-      }, 
+        zone: "4e4feaba70b41ed78295d2dcc090dd3a", 
+        apitoken: "oof_QRNdUC4aMQ3xIB8dmkGaZu7rk2J-0P_tN55l"
+      },
       "privatserver.my.id": {
-        "zone": "699bb9eb65046a886399c91daacb1968", 
-        "apitoken": "CrQMyDn2fhchlGne2ogAw7PvJLsg4x8vasBv__6D"
-      }, 
+        zone: "699bb9eb65046a886399c91daacb1968", 
+        apitoken: "CrQMyDn2fhchlGne2ogAw7PvJLsg4x8vasBv__6D"
+      },
       "panelwebsite.biz.id": {
-        "zone": "2d6aab40136299392d66eed44a7b1122", 
-        "apitoken": "cj17Lzg9otqwkYIVzgL0pcVA4GfcXqePHAOhCqa_"
-      }, 
+        zone: "2d6aab40136299392d66eed44a7b1122", 
+        apitoken: "cj17Lzg9otqwkYIVzgL0pcVA4GfcXqePHAOhCqa_"
+      },
       "mypanelstore.web.id": {
-        "zone": "c61c442d70392500611499c5af816532", 
-        "apitoken": "N_VhWv2ZK6UJxLdCnxMfZx9PtzAdmPGM3HmOjZR4"
-      }, 
+        zone: "c61c442d70392500611499c5af816532", 
+        apitoken: "N_VhWv2ZK6UJxLdCnxMfZx9PtzAdmPGM3HmOjZR4"
+      },
       "pteroserver.us.kg": {
-        "zone": "f693559a94aebc553a68c27a3ffe3b55", 
-        "apitoken": "qRxwgS3Kl_ziCXti2p4BHbWTvGUYzAuYmVM28ZEp"
-      }, 
+        zone: "f693559a94aebc553a68c27a3ffe3b55", 
+        apitoken: "qRxwgS3Kl_ziCXti2p4BHbWTvGUYzAuYmVM28ZEp"
+      },
       "digitalserver.us.kg": {
-        "zone": "df13e6e4faa4de9edaeb8e1f05cf1a36", 
-        "apitoken": "sH60tbg10UH8gpNrlYpf3UMse1CNJ01EKJ69YVqb"
-      }, 
+        zone: "df13e6e4faa4de9edaeb8e1f05cf1a36", 
+        apitoken: "sH60tbg10UH8gpNrlYpf3UMse1CNJ01EKJ69YVqb"
+      },
       "shopserver.us.kg": {
-        "zone": "54ca38e266bfdf2dcdb7f51fd79c2db5", 
-        "apitoken": "GRe4rg-vhb4c8iSjKCALHJC0LaxkzNPgmmgcDGpm"
+        zone: "54ca38e266bfdf2dcdb7f51fd79c2db5", 
+        apitoken: "GRe4rg-vhb4c8iSjKCALHJC0LaxkzNPgmmgcDGpm"
       }
     };
 
-    // Isi dropdown dengan daftar domain yang ada
-    const domainSelect = document.getElementById('domain');
-    for (const domain in domainsConfig) {
+    // Mengisi dropdown dengan domain yang tersedia
+    const domainSelect = document.getElementById('domainSelect');
+    for (const domain in globalSubdomain) {
       const option = document.createElement('option');
       option.value = domain;
       option.textContent = domain;
       domainSelect.appendChild(option);
     }
 
-    const form = document.getElementById('subdomainForm');
+    const form = document.getElementById('createSubdomainForm');
     const messageDiv = document.getElementById('message');
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', function(e) {
       e.preventDefault();
-      messageDiv.textContent = 'Memproses...';
+      messageDiv.textContent = "Memproses permintaan...";
 
+      // Ambil nilai dari form
       const selectedDomain = domainSelect.value;
-      const subdomainInput = document.getElementById('subdomain').value.trim();
-      const ipAddress = document.getElementById('ip').value.trim();
+      const hostInput = document.getElementById('hostInput').value.trim();
+      const ipInput = document.getElementById('ipInput').value.trim();
 
-      if (!selectedDomain || !subdomainInput || !ipAddress) {
-        messageDiv.textContent = 'Harap isi semua bidang!';
+      if (!selectedDomain || !hostInput || !ipInput) {
+        messageDiv.textContent = "Harap isi semua bidang!";
         return;
       }
 
-      // Ambil data konfigurasi untuk domain yang dipilih
-      const config = domainsConfig[selectedDomain];
-      const zoneId = config.zone;
-      const apiToken = config.apitoken;
+      // Ambil konfigurasi domain yang dipilih
+      const config = globalSubdomain[selectedDomain];
+      const zone = config.zone;
+      const apitoken = config.apitoken;
 
-      // Membentuk nama subdomain lengkap
-      const fullSubdomain = subdomainInput + '.' + selectedDomain;
+      // Bersihkan input dan bentuk nama subdomain penuh
+      const cleanHost = hostInput.replace(/[^a-z0-9.-]/gi, "");
+      const subdomainName = cleanHost + "." + selectedDomain;
+      const cleanIP = ipInput.replace(/[^0-9.]/gi, "");
 
-      // URL endpoint API Cloudflare untuk membuat DNS record
-      const url = `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`;
-
-      // Data yang dikirim (contoh: record tipe A)
-      const data = {
+      // Payload untuk API Cloudflare
+      const payload = {
         type: "A",
-        name: fullSubdomain,
-        content: ipAddress,
-        ttl: 1,          // ttl otomatis
-        proxied: false   // ubah ke true jika ingin menggunakan proxy Cloudflare
+        name: subdomainName,
+        content: cleanIP,
+        ttl: 3600,
+        priority: 10,
+        proxied: false
       };
 
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + apiToken
-          },
-          body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          messageDiv.textContent = `Subdomain ${fullSubdomain} berhasil dibuat!`;
-        } else {
-          messageDiv.textContent = `Gagal membuat subdomain. Error: ${JSON.stringify(result.errors)}`;
+      // Melakukan POST request ke API Cloudflare
+      axios.post(`https://api.cloudflare.com/client/v4/zones/${zone}/dns_records`, payload, {
+        headers: {
+          "Authorization": "Bearer " + apitoken,
+          "Content-Type": "application/json"
         }
-      } catch (error) {
-        messageDiv.textContent = `Terjadi kesalahan: ${error.message}`;
-      }
+      })
+      .then(function(response) {
+        const data = response.data;
+        if (data.success) {
+          // Jika berhasil, tampilkan pesan sukses
+          messageDiv.textContent = "Berhasil membuat subdomain: " + data.result.name + " dengan IP " + data.result.content;
+        } else {
+          messageDiv.textContent = "Gagal membuat subdomain: " + JSON.stringify(data.errors);
+        }
+      })
+      .catch(function(error) {
+        // Menangani error
+        let errMsg = error.response && error.response.data
+                     ? JSON.stringify(error.response.data)
+                     : error.message;
+        messageDiv.textContent = "Terjadi kesalahan: " + errMsg;
+      });
     });
   </script>
 </body>
-  </html>
-  
+</html>
