@@ -12,12 +12,11 @@ export default async function handler(req, res) {
     return;
   }
   
-  // Mengganti spasi dengan tanda dash (-)
-  // Misalnya, "halo bang" akan menjadi "halo-bang"
-  const formattedText = text.trim().split(/\s+/).join('-');
+  // Gunakan encoding standar; spasi akan menjadi "%20"
+  const encodedText = encodeURIComponent(text.trim());
   
   try {
-    const externalUrl = `https://fgsi-brat.hf.space/?text=${formattedText}&isVideo=false`;
+    const externalUrl = `https://fgsi-brat.hf.space/?text=${encodedText}&isVideo=false`;
     console.log("Fetching:", externalUrl);
     
     const response = await fetch(externalUrl);
@@ -25,11 +24,10 @@ export default async function handler(req, res) {
       throw new Error("Gagal mengambil dari API eksternal");
     }
     
-    // Ambil content-type dari respons, default ke image/webp
+    // Ambil content-type dari respons; default ke image/webp jika tidak ada
     const contentType = response.headers.get("content-type") || "image/webp";
     res.setHeader("Content-Type", contentType);
     
-    // Kirim data sebagai Buffer
     const arrayBuffer = await response.arrayBuffer();
     res.send(Buffer.from(arrayBuffer));
   } catch (error) {
