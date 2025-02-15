@@ -4,42 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cloudflare DNS Manager</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div style="margin: 0 auto; max-width: 600px; padding: 1rem;">
+  <div class="container">
     <h1>Cloudflare DNS Manager</h1>
     
-    <div style="margin-bottom: 2rem;">
-      <label>Pilih Domain: </label>
-      <select id="domainSelect"></select>
+    <!-- Dropdown untuk memilih domain -->
+    <div class="form-group">
+      <label for="domainSelect">Pilih Domain:</label>
+      <select id="domainSelect">
+        <option value="">Loading domains...</option>
+      </select>
     </div>
     
-    <div style="margin-bottom: 2rem; border: 1px solid #ccc; padding: 1rem;">
+    <!-- Form Tambah Subdomain -->
+    <div class="card">
       <h2>Tambah Subdomain</h2>
       <form id="addForm">
-        <div style="margin-bottom: 1rem;">
-          <label>Subdomain: </label>
+        <div class="form-group">
+          <label for="subdomainInput">Subdomain:</label>
           <input type="text" id="subdomainInput" placeholder="contoh: blog" required>
         </div>
-        <div style="margin-bottom: 1rem;">
-          <label>IP Address: </label>
+        <div class="form-group">
+          <label for="ipInput">IP Address:</label>
           <input type="text" id="ipInput" placeholder="contoh: 192.0.2.1" required>
         </div>
-        <button type="submit">Tambah Subdomain</button>
+        <button type="submit" class="btn">Tambah Subdomain</button>
       </form>
     </div>
     
-    <div style="margin-bottom: 2rem; border: 1px solid #ccc; padding: 1rem;">
+    <!-- Form Hapus Subdomain -->
+    <div class="card">
       <h2>Hapus Subdomain</h2>
       <form id="deleteForm">
-        <div style="margin-bottom: 1rem;">
-          <label>Subdomain (tanpa domain): </label>
+        <div class="form-group">
+          <label for="deleteSubdomainInput">Subdomain (tanpa domain):</label>
           <input type="text" id="deleteSubdomainInput" placeholder="contoh: blog" required>
         </div>
-        <button type="submit">Hapus Subdomain</button>
+        <button type="submit" class="btn btn-danger">Hapus Subdomain</button>
       </form>
     </div>
     
+    <!-- Pesan hasil aksi -->
     <p id="message"></p>
   </div>
   
