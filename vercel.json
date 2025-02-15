@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/brat(.*)", "destination": "/api/brat$1" }
+  ]
+}
