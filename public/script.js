@@ -46,10 +46,12 @@ document.addEventListener("DOMContentLoaded", function() {
       if (result.status === 200) {
         messageEl.textContent = `Subdomain ${subdomain}.${domain} berhasil ditambahkan.`;
       } else {
+        console.error("Error response:", result.data);
         messageEl.textContent = `Error: ${result.data.error}`;
       }
     })
     .catch(error => {
+      console.error("Error adding subdomain:", error);
       messageEl.textContent = `Error: ${error.message}`;
     });
   });
@@ -71,10 +73,12 @@ document.addEventListener("DOMContentLoaded", function() {
       if (result.status === 200) {
         messageEl.textContent = `Subdomain ${subdomain}.${domain} berhasil dihapus.`;
       } else {
+        console.error("Error response:", result.data);
         messageEl.textContent = `Error: ${result.data.error}`;
       }
     })
     .catch(error => {
+      console.error("Error deleting subdomain:", error);
       messageEl.textContent = `Error: ${error.message}`;
     });
   });
